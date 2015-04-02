@@ -1,0 +1,154 @@
+<html>
+<head>
+<title>贪吃蛇</title>
+<style><!--
+.food{background-color:green}
+.snake{background-color:red}
+-->
+</style>
+</head>
+<body>
+<script>
+var num=15;
+var rows=20;
+var cols=30;
+var boderwidth=10;
+var foodnum=0;
+var sx=parseInt(Math.random()*cols);
+var sy=parseInt(Math.random()*rows);
+function creatmap(){
+var bw=num*cols+2*boderwidth;
+var bh=num*rows+2*boderwidth;
+document.body.innerHTML='<div id="mainmap" style="position:absolute;left:'+(document.body.clientWidth-bw)/2+'px;top:'+(document.body.clientHeight-bh)/2+'px;width:'+bw+'px;height:'+bh+'px;borderwidth:'+boderwidth+'px;border-style:outset;border-color:#6C7208"><li style="margin-top:300px;width:'+bw+'px;height:20px;background-color:#6C7208;font-size:15">请用键盘上下左右键控制方向，请尊重版权，如需升级联系张先生</li></div>';
+       map= new Array();
+       for(y=0;y<rows;y++){
+       map[y]= new Array();
+       for(x=0;x<cols;x++){
+       map[y][x]='0';
+       }
+       }
+     createfood(); 
+     createsnake(); 
+}
+ //创建食物
+ function createfood(){
+ fx=parseInt(Math.random()*cols);
+ fy=parseInt(Math.random()*rows);
+ if(map[fy][fx]=='0'){
+ mainmap.innerHTML +='<span style="position:absolute;left:'+fx*num+';top:'+fy*num+';width:'+num+';height:'+num+';overflow:hidden;" class="food"></span>';
+   map[fy][fx]='f';
+ }else{
+ createfood();
+ }
+ }
+ 
+ //创建蛇的位置
+ function createsnake(){
+ mainmap.innerHTML+='<div x='+sx+' y='+sy+' style="position:absolute;left:'+sx*num+';top:'+sy*num+';width:'+num+';height:'+num+';overflow:hidden;" class="snake"></div>';
+ map[sy][sx]='s';
+ }
+ document.onkeydown=keydown;
+ //方向
+ function keydown(){
+key=event.keyCode;
+//var key=37;
+ switch(key){
+ case 37://左
+   dir(-1,0);
+  break;
+  case 38://上
+  dir(0,-1);
+  break;
+  case 39://右
+  dir(1,0);
+  break;
+  case 40://下
+  dir(0,1);
+  break;
+ }
+ return false;
+ }
+ var start=0;
+ function dir(x,y){
+  gox=x;
+  goy=y;
+  //alert(gox);
+  //alert(sx);
+  if(start==0){
+  otimes();
+  start=1;
+  move();
+  }
+ }
+ 
+function move(){
+sx+=gox;
+sy+=goy;
+if(sy==20){
+sy -=1;
+}
+if(sy<0 || sy>rows || sx<0 || sx>cols){
+move1();
+}else{
+var snakefront=map[sy][sx];
+if(snakefront=='0'){
+move2();
+} else if(snakefront=='f'){
+move3();
+} else{
+if(sx==30||sy==20){
+ map[sy][sx]='0';
+ move2();
+} else{
+move1();
+  }
+}
+}
+}
+//重新开始
+function move1(){
+restart=confirm("游戏结束，重新开始？");
+if(restart){
+window.location.reload();
+}
+}
+//蛇前进的空地
+var times=200;
+function move2(){
+homey=sy-goy;
+homex=sx-gox;
+map[homey][homex]='0';
+if(foodnum==0){
+for(t=1;t<document.getElementsByTagName('div').length;t++){
+document.getElementsByTagName('div')[t].style.backgroundColor="white";
+}
+}else {
+  ter=document.getElementsByTagName('div').length-foodnum;
+for(t=1;t<ter;t++){
+document.getElementsByTagName('div')[t].style.backgroundColor="white";
+}
+}
+createsnake();
+setTimeout('move()',times);
+}
+
+function move3(){
+createsnake();
+foodnum +=1;
+createfood();
+dy=sy-goy;
+dx=sx-gox;
+map[dy][dx]='0';
+setTimeout('move()',times);
+}
+//蛇越来越快
+function otimes(){
+times-=5;
+if(times>5){
+setTimeout('otimes()',5000)
+}
+}
+onload=creatmap;
+</script>
+</body>
+</html>

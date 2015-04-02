@@ -1,0 +1,1439 @@
+<html>
+<head>
+<title>五子棋</title>
+<meta http-equiv="content-Type" content="text/html;charset=gbk"/>
+</head>
+<body>
+<script type="text/javascript">
+var boderwidth=10;
+var rows=20;
+var cols=30;
+var num=15;
+var bg="red";
+var score=10;
+var bw=2*num*cols+2*boderwidth;
+var bh=2*num*rows+2*boderwidth;
+function createtable(){
+var row=24;
+var cell=30;
+map= new Array();
+document.body.innerHTML='<div id="sa" style="position:absolute;left:'+(document.body.clientWidth-bw)/2+'px;top:'+(document.body.clientHeight-bh)/2+'px;"><div id="sa1" style="background-color:#6ac706"></div>'+
+'<div id="b1" style="margin-left:850;margin-top:-605;*margin-bottom:10;*margin-left:850;width:150;height:605;*height:573;color:red;font-size:40;background-color:#6ac706;">'+
+'<br/><b id="b2" style="margin-left:5;margin-top:10;font-size:28;color:#2c09dd">游戏倒计时</b>'+
+'<br/><b id="b5" style="margin-left:35;margin-top:30;color:#f60829;font-size:50;"></b>'+
+'<br/><b id="b3" style="margin-left:5;margin-top:20;font-size:35;color:#0af4f1">游戏得分</b>'+
+'<br/><b id="b4" style="margin-left:35;margin-top:30;color:#f60829;font-size:50;">0</b>'+
+'<br/><b id="b6" style="margin-left:5;margin-top:20;font-size:35;color:#717e07">游戏用时</b>'+
+'<br/><b id="b7" style="margin-left:30;margin-top:30;color:#f60829;font-size:30;"></b>'+
+'<br/><br/><b style="margin-left:25;*margin-left:15;"><input type="button" style="font-size:20" value="重新开始" onclick="kaishi();"/></b>'+
+'</div></div>';
+var str='<table id="ad" border="5" cellspacing="0" style="border-collapse:collapse;" bordercolor= "#808080">';
+for(i=0;i<row;i++){
+  str+='<tr>';
+  map[i]= new Array();
+  for(j=0;j<cell;j++){
+   str+='<td id="'+i+'|'+j+'" style="width:25;height:25;" onclick="jiance(this,'+i+','+j+')"></td>';
+  }
+  str+="</tr>";
+ }
+ str+="</table> ";
+ document.getElementById('sa1').innerHTML=str;
+}
+function jiance(a,b,c){
+a.style.background="url(image/1.jpg) center no-repeat";
+map[b][c]='01';
+test();
+test4();
+jk='0';
+f=test6(b,c);
+if(f){
+//alert(f);
+jk='1';
+score=score+5;
+} else {
+score=score+10;
+}
+gh=test1(jk);
+if(gh){
+//alert(gh);
+d=gh;
+}else {
+//alert('ss');
+d=yanqi(b,c,jk);
+}
+f=znh(b,c);
+if(f){
+//alert(f);
+d=f;
+}
+rt=setTimeout("document.getElementById(d).style.background='url(image/2.jpg) center no-repeat'",1000);
+document.getElementById('b4').innerHTML=score;
+}
+function test(){
+m=0;
+while(m<map.length){
+p=0;
+while(p<map[m].length){
+if(map[m][p]=="01"){
+if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-2]=="01" && map[m][p-3]=="01" && map[m][p-4]=="01" || map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+2]=="01" && map[m][p+3]=="01" && map[m][p+4]=="01"){
+//alert('s1');
+restart=confirm("你战胜了机器人，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-2][p]=="01" && map[m-3][p]=="01" && map[m-4][p]=="01" || map[m][p]=="01" && map[m+1][p]=="01" && map[m+2][p]=="01" && map[m+3][p]=="01" && map[m+4][p]=="01"){
+//alert('s2');
+restart=confirm("你战胜了机器人，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-2][p+2]=="01" && map[m-3][p+3]=="01" && map[m-4][p+4]=="01" || map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+2][p-2]=="01" && map[m+3][p-3]=="01" && map[m+4][p-4]=="01"){
+//alert('s3');
+restart=confirm("你战胜了机器人，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-2][p-2]=="01" && map[m-3][p-3]=="01" && map[m-4][p-4]=="01" || map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+2][p+2]=="01" && map[m+3][p+3]=="01" && map[m+4][p+4]=="01"){
+//alert('s4');
+restart=confirm("你战胜了机器人，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} 
+}
+p++;
+}
+m++;
+}
+}
+function znh(m,p){
+if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-2][p]=="01" && map[m-3][p]=="01"){
+//alert('30');
+if(map[m-4][p]!="01" && map[m-4][p]!="02"){
+d=(m-4)+'|'+p;
+map[m-4][p]='02';
+return d;
+} else {
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+}
+}
+}  else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-2]=="01" && map[m][p-3]=="01"){
+//alert('29');
+if(map[m][p-4]!="01" && map[m][p-4]!="02"){
+d=m+'|'+(p-4);
+map[m][p-4]='02';
+return d;
+} else {
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+}
+}
+}  else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+2][p-2]=="01" && map[m+3][p-3]=="01"){
+//alert('12');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+} else {
+if(map[m+4][p-4]!="01" && map[m+4][p-4]!="02"){
+d=(m+4)+'|'+(p-4);
+map[m+4][p-4]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-2][p+2]=="01" && map[m-3][p+3]=="01"){
+//alert('b1');
+if(map[m+1][p-1]!="01" && map[m+1][p-1]!="02"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+} else {
+if(map[m-4][p+4]!="01" && map[m-4][p+4]!="02"){
+d=(m-4)+'|'+(p+4);
+map[m-4][p+4]='02';
+return d;
+}
+}
+
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-2][p-2]=="01" && map[m-3][p-3]=="01"){
+//alert('b2');
+if(map[m+1][p+1]!="01" && map[m+1][p+1]!="02"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+} else {
+if(map[m-4][p-4]!="01" && map[m-4][p-4]!="02"){
+d=(m-4)+'|'+(p-4);
+map[m-4][p-4]='02';
+return d;
+}
+}
+}else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+2][p+2]=="01" && map[m+3][p+3]=="01"){
+//alert('9');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+} else {
+if(map[m+4][p+4]!="01" && map[m+4][p+4]!="02"){
+d=(m+4)+'|'+(p+4);
+map[m+4][p+4]='02';
+return d;
+}
+}
+}  else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+2][p]=="01" && map[m+3][p]=="01"){
+//alert('6');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+} else {
+if(map[m+4][p]!="01" && map[m+4][p]!="02"){
+d=(m+4)+'|'+p;
+map[m+4][p]='02';
+return d;
+}
+}
+}  else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+2]=="01" && map[m][p+3]=="01"){
+//alert('3');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+} else {
+if(map[m][p+4]!="01" && map[m][p+4]!="02"){
+d=m+'|'+(p+4);
+map[m][p+4]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-2]=="01"){
+//alert('1');
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+} else {
+if(map[m][p-3]!="01" && map[m][p-3]!="02"){
+d=m+'|'+(p-3);
+map[m][p-3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+2]=="01"){
+//alert('2');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+} else {
+if(map[m][p+3]!="01" && map[m][p+3]!="02"){
+d=m+'|'+(p+3);
+map[m][p+3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+2][p]=="01"){
+//alert('4');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+} else {
+if(map[m+3][p]!="01" && map[m+3][p]!="02"){
+d=(m+3)+'|'+p;
+map[m+3][p]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-2][p]=="01"){
+//alert('5');
+//alert(m-3+','+p);
+//alert(map[m-3][p]);
+//alert(map[m+1][p]);
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+} else {
+if(map[m-3][p]!="01" && map[m-3][p]!="02"){
+d=(m-3)+'|'+p;
+map[m-3][p]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-2][p-2]=="01"){
+//alert('7');
+if(map[m+1][p+1]!="01" && map[m+1][p+1]!="02"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+} else {
+if(map[m-3][p-3]!="01" && map[m-3][p-3]!="02"){
+d=(m-3)+'|'+(p-3);
+map[m-3][p-3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+2][p+2]=="01"){
+//alert('8');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+} else {
+if(map[m+3][p+3]!="01" && map[m+3][p+3]!="02"){
+d=(m+3)+'|'+(p+3);
+map[m+3][p+3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-2][p+2]=="01"){
+//alert('10');
+if(map[m+1][p-1]!="01" && map[m+1][p-1]!="02"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+} else {
+if(map[m-3][p+3]!="01" && map[m-3][p+3]!="02"){
+d=(m-3)+'|'+(p+3);
+map[m-3][p+3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+2][p-2]=="01"){
+//alert('11');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+} else {
+if(map[m+3][p-3]!="01" && map[m+3][p-3]!="02"){
+d=(m+3)+'|'+(p-3);
+map[m+3][p-3]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-3]=="01"){
+//alert('13');
+if(map[m][p-2]!="01" && map[m][p-2]!="02"){
+d=m+'|'+(p-2);
+map[m][p-2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+3]=="01"){
+//alert('14');
+if(map[m][p+2]!="01" && map[m][p+2]!="02"){
+d=m+'|'+(p+2);
+map[m][p+2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-3][p]=="01"){
+//alert('15');
+if(map[m-2][p]!="01" && map[m-2][p]!="02"){
+d=(m-2)+'|'+p;
+map[m-2][p]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+3][p]=="01"){
+//alert('16');
+if(map[m+2][p]!="01" && map[m+2][p]!="02"){
+d=(m+2)+'|'+p;
+map[m+2][p]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-3][p-3]=="01"){
+//alert('17');
+if(map[m-2][p-2]!="01" && map[m-2][p-2]!="02"){
+d=(m-2)+'|'+(p-2);
+map[m-2][p-2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+3][p+3]=="01"){
+//alert('18');
+if(map[m+2][p+2]!="01" && map[m+2][p+2]!="02"){
+d=(m+2)+'|'+(p+2);
+map[m+2][p+2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+3][p-3]=="01"){
+//alert('19');
+if(map[m+2][p-2]!="01" && map[m+2][p-2]!="02"){
+d=(m+2)+'|'+(p-2);
+map[m+2][p-2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-3][p+3]=="01"){
+//alert('20');
+if(map[m-2][p+2]!="01" && map[m-2][p+2]!="02"){
+d=(m-2)+'|'+(p+2);
+map[m-2][p+2]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m][p-2]=="01" && map[m][p-3]=="01"){
+//alert('21');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m][p+2]=="01" && map[m][p+3]=="01"){
+//alert('22');
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-2][p]=="01" && map[m-3][p]=="01"){
+//alert('23');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+2][p]=="01" && map[m+3][p]=="01"){
+//alert('24');
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-2][p-2]=="01" && map[m-3][p-3]=="01"){
+//alert('25');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+2][p+2]=="01" && map[m+3][p+3]=="01"){
+//alert('26');
+if(map[m+1][p+1]!="01" && map[m+1][p+1]!="02"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m+2][p-2]=="01" && map[m+3][p-3]=="01"){
+//alert('27');
+if(map[m+1][p-1]!="01" && map[m+1][p-1]!="02"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+}
+} else if(map[m][p]=="01" && map[m-2][p+2]=="01" && map[m-3][p+3]=="01"){
+//alert('28');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+}
+}else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m+1][p]=="01"){
+//alert('31');
+if(map[m+2][p]!="01" && map[m+2][p]!="02"){
+d=(m+2)+'|'+p;
+map[m+2][p]='02';
+return d;
+} else {
+if(map[m-2][p]!="01" && map[m-2][p]!="02"){
+d=(m-2)+'|'+p;
+map[m-2][p]='02';
+return d;
+}
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p+1]=="01"){
+//alert('32');
+//alert(map[m][p+2]);
+if(map[m][p+2]!="01" && map[m][p+2]!="02"){
+d=m+'|'+(p+2);
+map[m][p+2]='02';
+return d;
+} else {
+if(map[m][p-2]!="01" && map[m][p-2]!="02"){
+d=m+'|'+(p-2);
+map[m][p-2]='02';
+return d;
+}
+}
+}
+}
+//检测堵棋开始
+function test6(m,p){
+if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-2]=="01"){
+//alert('1');
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+return 1;
+} else {
+if(map[m][p-3]!="01" && map[m][p-3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+2]=="01"){
+//alert('2');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+return 1;
+} else {
+if(map[m][p+3]!="01" && map[m][p+3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+2]=="01" && map[m][p+3]=="01"){
+//alert('3');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+return 1;
+} else {
+if(map[m][p+4]!="01" && map[m][p+4]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+2][p]=="01"){
+//alert('4');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+return 1;
+} else {
+if(map[m+3][p]!="01" && map[m+3][p]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-2][p]=="01"){
+//alert('5');
+//alert(m-3+','+p);
+//alert(map[m-3][p]);
+//alert(map[m+1][p]);
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+return 1;
+} else {
+if(map[m-3][p]!="01" && map[m-3][p]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+2][p]=="01" && map[m+3][p]=="01"){
+//alert('6');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+return 1;
+} else {
+if(map[m+4][p]!="01" && map[m+4][p]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-2][p-2]=="01"){
+//alert('7');
+if(map[m+1][p+1]!="01" && map[m+1][p+1]!="02"){
+return 1;
+} else {
+if(map[m-3][p-3]!="01" && map[m-3][p-3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+2][p+2]=="01"){
+//alert('8');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+return 1;
+} else {
+if(map[m+3][p+3]!="01" && map[m+3][p+3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+2][p+2]=="01" && map[m+3][p+3]=="01"){
+//alert('9');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+return 1;
+} else {
+if(map[m+4][p+4]!="01" && map[m+4][p+4]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-2][p+2]=="01"){
+//alert('10');
+if(map[m+1][p-1]!="01" && map[m+1][p-1]!="02"){
+return 1;
+} else {
+if(map[m-3][p+3]!="01" && map[m-3][p+3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+2][p-2]=="01"){
+//alert('11');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+return 1;
+} else {
+if(map[m+3][p-3]!="01" && map[m+3][p-3]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+2][p-2]=="01" && map[m+3][p-3]=="01"){
+//alert('12');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+return 1;
+} else {
+if(map[m+4][p-4]!="01" && map[m+4][p-4]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-3]=="01"){
+//alert('13');
+if(map[m][p-2]!="01" && map[m][p-2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m][p+1]=="01" && map[m][p+3]=="01"){
+//alert('14');
+if(map[m][p+2]!="01" && map[m][p+2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-3][p]=="01"){
+//alert('15');
+if(map[m-2][p]!="01" && map[m-2][p]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+1][p]=="01" && map[m+3][p]=="01"){
+//alert('16');
+if(map[m+2][p]!="01" && map[m+2][p]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-1][p-1]=="01" && map[m-3][p-3]=="01"){
+//alert('17');
+if(map[m-2][p-2]!="01" && map[m-2][p-2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+1][p+1]=="01" && map[m+3][p+3]=="01"){
+//alert('18');
+if(map[m+2][p+2]!="01" && map[m+2][p+2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+1][p-1]=="01" && map[m+3][p-3]=="01"){
+//alert('19');
+if(map[m+2][p-2]!="01" && map[m+2][p-2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-1][p+1]=="01" && map[m-3][p+3]=="01"){
+//alert('20');
+if(map[m-2][p+2]!="01" && map[m-2][p+2]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m][p-2]=="01" && map[m][p-3]=="01"){
+//alert('21');
+if(map[m][p-1]!="01" && map[m][p-1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m][p+2]=="01" && map[m][p+3]=="01"){
+//alert('22');
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-2][p]=="01" && map[m-3][p]=="01"){
+//alert('23');
+if(map[m-1][p]!="01" && map[m-1][p]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+2][p]=="01" && map[m+3][p]=="01"){
+//alert('24');
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-2][p-2]=="01" && map[m-3][p-3]=="01"){
+//alert('25');
+if(map[m-1][p-1]!="01" && map[m-1][p-1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+2][p+2]=="01" && map[m+3][p+3]=="01"){
+//alert('26');
+if(map[m+1][p+1]!="01" && map[m+1][p+1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m+2][p-2]=="01" && map[m+3][p-3]=="01"){
+//alert('27');
+if(map[m+1][p-1]!="01" && map[m+1][p-1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m-2][p+2]=="01" && map[m-3][p+3]=="01"){
+//alert('28');
+if(map[m-1][p+1]!="01" && map[m-1][p+1]!="02"){
+return 1;
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p-2]=="01" && map[m][p-3]=="01"){
+//alert('29');
+if(map[m][p-4]!="01" && map[m][p-4]!="02"){
+return 1;
+} else {
+if(map[m][p+1]!="01" && map[m][p+1]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m-2][p]=="01" && map[m-3][p]=="01"){
+//alert('30');
+if(map[m-4][p]!="01" && map[m-4][p]!="02"){
+return 1;
+} else {
+if(map[m+1][p]!="01" && map[m+1][p]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m-1][p]=="01" && map[m+1][p]=="01"){
+//alert('31');
+if(map[m+2][p]!="01" && map[m+2][p]!="02"){
+return 1;
+} else {
+if(map[m-2][p]!="01" && map[m-2][p]!="02"){
+return 1;
+}
+}
+} else if(map[m][p]=="01" && map[m][p-1]=="01" && map[m][p+1]=="01"){
+//alert('32');
+//alert(map[m][p+2]);
+if(map[m][p+2]!="01" && map[m][p+2]!="02"){
+return 1;
+} else {
+if(map[m][p-2]!="01" && map[m][p-2]!="02"){
+return 1;
+}
+}
+}
+}
+
+
+
+//检测堵棋结束
+
+//检测绿字是否胜出
+function test4(){
+m=0;
+while(m<map.length){
+p=0;
+while(p<map[m].length){
+if(map[m][p]=="02"){
+if(map[m][p]=="02" && map[m-1][p+1]=="02" && map[m-2][p+2]=="02" && map[m-3][p+3]=="02" && map[m-4][p+4]=="02" || map[m][p]=="02" && map[m+1][p-1]=="02" && map[m+2][p-2]=="02" && map[m+3][p-3]=="02" && map[m+4][p-4]=="02"){
+//alert('t1');
+restart=confirm("机器人胜出，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="02" && map[m+1][p+1]=="02" && map[m+2][p+2]=="02" && map[m+3][p+3]=="02" && map[m+4][p+4]=="02" || map[m][p]=="02" && map[m-1][p-1]=="02" && map[m-2][p-2]=="02" && map[m-3][p-3]=="02" && map[m-4][p-4]=="02"){
+//alert('t2');
+restart=confirm("机器人胜出，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+2]=="02" && map[m][p+3]=="02" && map[m][p+4]=="02" || map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-2]=="02" && map[m][p-3]=="02" && map[m][p-4]=="02"){
+//alert('t3');
+restart=confirm("机器人胜出，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+} else if(map[m][p]=="02" && map[m+1][p]=="02" && map[m+2][p]=="02" && map[m+3][p]=="02" && map[m+4][p]=="02" || map[m][p]=="02" && map[m-1][p]=="02" && map[m-2][p]=="02" && map[m-3][p]=="02" && map[m-4][p]=="02"){
+//alert('t4');
+restart=confirm("机器人胜出，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+break;
+}
+}
+p++;
+}
+m++;
+}
+}
+function test1(b){
+m=0;
+while(m<map.length){
+p=0;
+while(p<map[m].length){
+if(map[m][p]=="02"){
+if(b=="0"){
+if(map[m][p]=="02" && map[m-2][p+2]=="02" && map[m-3][p+3]=="02" && map[m-4][p+4]=="02"){
+//alert('35');
+if(map[m-1][p+1]!="02" && map[m-1][p+1]!="01"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p+1]=="02" && map[m-3][p+3]=="02" && map[m-4][p+4]=="02"){
+//alert('36');
+if(map[m-2][p+2]!="02" && map[m-2][p+2]!="01"){
+d=(m-2)+'|'+(p+2);
+map[m-2][p+2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p-2]=="02" && map[m+3][p-3]=="02" && map[m+4][p-4]=="02"){
+//alert('37');
+if(map[m+1][p-1]!="02" && map[m+1][p-1]!="01"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p-1]=="02" && map[m+3][p-3]=="02" && map[m+4][p-4]=="02"){
+//alert('38');
+if(map[m+2][p-2]!="02" && map[m+2][p-2]!="01"){
+d=(m+2)+'|'+(p-2);
+map[m+2][p-2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p-2]=="02" && map[m-3][p-3]=="02" && map[m-4][p-4]=="02"){
+//alert('39');
+if(map[m-1][p-1]!="02" && map[m-1][p-1]!="01"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p-1]=="02" && map[m-3][p-3]=="02" && map[m-4][p-4]=="02"){
+//alert('40');
+if(map[m-2][p-2]!="02" && map[m-2][p-2]!="01"){
+d=(m-2)+'|'+(p-2);
+map[m-2][p-2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p+2]=="02" && map[m+3][p+3]=="02" && map[m+4][p+4]=="02"){
+//alert('41');
+if(map[m+1][p+1]!="02" && map[m+1][p+1]!="01"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p+1]=="02" && map[m+3][p+3]=="02" && map[m+4][p+4]=="02"){
+//alert('42');
+if(map[m+2][p+2]!="02" && map[m+2][p+2]!="01"){
+d=(m+2)+'|'+(p+2);
+map[m+2][p+2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p]=="02" && map[m-3][p]=="02" && map[m-4][p]=="02"){
+//alert('43');
+if(map[m-1][p]!="02" && map[m-1][p]!="01"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p]=="02" && map[m-3][p]=="02" && map[m-4][p]=="02"){
+//alert('44');
+if(map[m-2][p]!="02" && map[m-2][p]!="01"){
+d=(m-2)+'|'+p;
+map[m-2][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-3]=="02" && map[m][p-4]=="02"){ 
+//alert('45');
+if(map[m][p-2]!="02" && map[m][p-2]!="01"){
+d=m+'|'+(p-2);
+map[m][p-2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p-2]=="02" && map[m][p-3]=="02" && map[m][p-4]=="02"){ 
+//alert('46');
+if(map[m][p-1]!="02" && map[m][p-1]!="01"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p]=="02" && map[m+3][p]=="02" && map[m+4][p]=="02"){
+//alert('47');
+if(map[m+2][p]!="02" && map[m+2][p]!="01"){
+d=(m+2)+'|'+p;
+map[m+2][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p]=="02" && map[m+3][p]=="02" && map[m+4][p]=="02"){
+//alert('48');
+if(map[m+1][p]!="02" && map[m+1][p]!="01"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+2]=="02" && map[m][p+4]=="02"){
+//alert('49');
+if(map[m][p+3]!="02" && map[m][p+3]!="01"){
+d=m+'|'+(p+3);
+map[m][p+3]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p+2]=="02" && map[m][p+3]=="02" && map[m][p+4]=="02"){
+//alert('50');
+if(map[m][p+1]!="02" && map[m][p+1]!="01"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p+1]=="02" && map[m-2][p+2]=="02" && map[m-3][p+3]=="02"){
+//alert('51');
+if(map[m-4][p+4]!="02" && map[m-4][p+4]!="01"){
+d=(m-4)+'|'+(p+4);
+map[m-4][p+4]='02';
+return d;
+break;
+} else {
+if(map[m+1][p-1]!="02" && map[m+1][p-1]!="01"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p-1]=="02" && map[m+2][p-2]=="02" && map[m+3][p-3]=="02"){
+//alert('52');
+if(map[m+4][p-4]!="02" && map[m+4][p-4]!="01"){
+d=(m+4)+'|'+(p-4);
+map[m+4][p-4]='02';
+return d;
+break;
+} else {
+if(map[m-1][p+1]!="02" && map[m-1][p+1]!="01"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m-1][p-1]=="02" && map[m-2][p-2]=="02" && map[m-3][p-3]=="02"){
+//alert('53');
+if(map[m-4][p-4]!="02" && map[m-4][p-4]!="01"){
+d=(m-4)+'|'+(p-4);
+map[m-4][p-4]='02';
+return d;
+break;
+} else {
+if(map[m+1][p+1]!="02" && map[m+1][p+1]!="01"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p+1]=="02" && map[m+2][p+2]=="02" && map[m+3][p+3]=="02"){
+//alert('54');
+if(map[m+4][p+4]!="02" && map[m+4][p+4]!="01"){
+d=(m+4)+'|'+(p+4);
+map[m+4][p+4]='02';
+return d;
+break;
+} else {
+if(map[m-1][p-1]!="02" && map[m-1][p-1]!="01"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p]=="02" && map[m+2][p]=="02" && map[m+3][p]=="02"){
+//alert('55');
+if(map[m+4][p]!="02" && map[m+4][p]!="01"){
+d=(m+4)+'|'+p;
+map[m+4][p]='02';
+return d;
+break;
+} else {
+if(map[m-1][p]!="02" && map[m-1][p]!="01"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m-1][p]=="02" && map[m-2][p]=="02" && map[m-3][p]=="02"){
+
+//alert('56');
+if(map[m-4][p]!="02" && map[m-4][p]!="01"){
+d=(m-4)+'|'+p;
+map[m-4][p]='02';
+return d;
+break;
+} else {
+if(map[m+1][p]!="02" && map[m+1][p]!="01"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-2]=="02" && map[m][p-3]=="02"){
+
+//alert('57');
+if(map[m][p-4]!="02" && map[m][p-4]!="01"){
+d=m+'|'+(p-4);
+map[m][p-4]='02';
+return d;
+break;
+} else {
+if(map[m][p+1]!="02" && map[m][p+1]!="01"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+2]=="02" && map[m][p+3]=="02"){
+//alert('58');
+if(map[m][p+4]!="02" && map[m][p+4]!="01"){
+d=m+'|'+(p+4);
+map[m][p+4]='02';
+return d;
+break;
+} else {
+if(map[m][p-1]!="02" && map[m][p-1]!="01"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m-2][p+2]=="02" && map[m-3][p+3]=="02"){
+//alert('1');
+if(map[m-1][p+1]!="02" && map[m-1][p+1]!="01"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+break;
+} 
+} else if(map[m][p]=="02" && map[m+2][p-2]=="02" && map[m+3][p-3]=="02"){
+//alert('2');
+if(map[m+1][p-1]!="02" && map[m+1][p-1]!="01"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p+2]=="02" && map[m+3][p+3]=="02"){
+//alert('3');
+if(map[m+1][p+1]!="02" && map[m+1][p+1]!="01"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p-2]=="02" && map[m-3][p-3]=="02"){
+//alert('4');
+if(map[m-1][p-1]!="02" && map[m-1][p-1]!="01"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p+1]=="02" && map[m-3][p+3]=="02"){
+//alert('5');
+if(map[m-2][p+2]!="02" && map[m-2][p+2]!="01"){
+d=(m-2)+'|'+(p+2);
+map[m-2][p+2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p-1]=="02" && map[m+3][p-3]=="02"){
+//alert('6');
+if(map[m+2][p-2]!="02" && map[m+2][p-2]!="01"){
+d=(m+2)+'|'+(p-2);
+map[m+2][p-2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p+1]=="02" && map[m+3][p+3]=="02"){
+//alert('7');
+if(map[m+2][p+2]!="02" && map[m+2][p+2]!="01"){
+d=(m+2)+'|'+(p+2);
+map[m+2][p+2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p-1]=="02" && map[m-3][p-3]=="02"){
+//alert('8');
+if(map[m-2][p-2]!="02" && map[m-2][p-2]!="01"){
+d=(m-2)+'|'+(p-2);
+map[m-2][p-2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p+1]=="02" && map[m-2][p+2]=="02"){
+//alert('9');
+if(map[m-3][p+3]!="02" && map[m-3][p+3]!="01"){
+d=(m-3)+'|'+(p+3);
+map[m-3][p+3]='02';
+return d;
+break;
+} else {
+if(map[m+1][p-1]!="02" && map[m+1][p-1]!="01"){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p-1]=="02" && map[m+2][p-2]=="02"){
+//alert('10');
+if(map[m+3][p-3]!="02" && map[m+3][p-3]!="01"){
+d=(m+3)+'|'+(p-3);
+map[m+3][p-3]='02';
+return d;
+break;
+} else {
+if(map[m-1][p+1]!="02" && map[m-1][p+1]!="01"){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p+1]=="02" && map[m+2][p+2]=="02"){
+//alert('11');
+if(map[m+3][p+3]!="02" && map[m+3][p+3]!="01"){
+d=(m+3)+'|'+(p+3);
+map[m+3][p+3]='02';
+return d;
+break;
+} else {
+if(map[m-1][p-1]!="02" && map[m-1][p-1]!="01"){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m-1][p-1]=="02" && map[m-2][p-2]=="02"){
+//alert('12');
+if(map[m-3][p-3]!="02" && map[m-3][p-3]!="01"){
+d=(m-3)+'|'+(p-3);
+map[m-3][p-3]='02';
+return d;
+break;
+} else {
+if(map[m+1][p+1]!="02" && map[m+1][p+1]!="01"){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-3]=="02"){
+//alert('13');
+if(map[m][p-2]!="02" && map[m][p-2]!="01"){
+d=m+'|'+(p-2);
+map[m][p-2]='02';
+return d;
+break;
+} 
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+3]=="02"){
+//alert('14');
+if(map[m][p+2]!="02" && map[m][p+2]!="01" ){
+d=m+'|'+(p+2);
+map[m][p+2]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p-2]=="02" && map[m][p-3]=="02"){
+//alert('15');
+if(map[m][p-1]!="02" && map[m][p-1]!="01" ){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p+2]=="02" && map[m][p+3]=="02"){
+//alert('16');
+if(map[m][p+1]!="02" && map[m][p+1]!="01" ){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-2]=="02"){
+//alert('17');
+if(map[m][p-3]!="02" && map[m][p-3]!="01"){
+d=m+'|'+(p-3);
+map[m][p-3]='02';
+return d;
+break;
+} else {
+if(map[m][p+1]!="02" && map[m][p+1]!="01"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+}
+
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+2]=="02"){
+//alert('18');
+if(map[m][p+3]!="02" && map[m][p+3]!="01"){
+d=m+'|'+(p+3);
+map[m][p+3]='02';
+return d;
+break;
+} else {
+if(map[m][p-1]!="02" && map[m][p-1]!="01"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m-1][p]=="02" && map[m-3][p]=="02"){
+//alert('19');
+if(map[m-2][p]!="02" && map[m-2][p]!="01" ){
+d=(m-2)+'|'+p;
+map[m-2][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+1][p]=="02" && map[m+3][p]=="02"){
+//alert('20');
+if(map[m+2][p]!="02" && map[m+2][p]!="01" ){
+d=(m+2)+'|'+p;
+map[m+2][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p]=="02" && map[m-3][p]=="02"){
+//alert('21');
+if(map[m-1][p]!="02" && map[m-1][p]!="01" ){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p]=="02" && map[m+3][p]=="02"){
+//alert('22');
+if(map[m+1][p]!="02" && map[m+1][p]!="01" ){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-1][p]=="02" && map[m-2][p]=="02"){
+//alert('23');
+if(map[m-3][p]!="02" && map[m-3][p]!="01"){
+d=(m-3)+'|'+p;
+map[m-3][p]='02';
+return d;
+break;
+} else {
+if(map[m+1][p]!="02" && map[m+1][p]!="01"){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+1][p]=="02" && map[m+2][p]=="02"){
+//alert('24');
+if(map[m+3][p]!="02" && map[m+3][p]!="01"){
+d=(m+3)+'|'+p;
+map[m+3][p]='02';
+return d;
+break;
+} else {
+if(map[m-1][p]!="02" && map[m-1][p]!="01"){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+break;
+}
+}
+
+} else if(map[m][p]=="02" && map[m][p-1]=="02" && map[m][p-2]=="02"){
+//alert('25');
+if(map[m][p-3]!="02" && map[m][p-3]!="01"){
+d=m+'|'+(p-3);
+map[m][p-3]='02';
+return d;
+break;
+} else {
+if(map[m][p+1]!="02" && map[m][p+1]!="01"){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m][p+1]=="02" && map[m][p+2]=="02"){
+//alert('26');
+if(map[m][p+3]!="02" && map[m][p+3]!="01"){
+d=m+'|'+(p+3);
+map[m][p+3]='02';
+return d;
+break;
+} else {
+if(map[m][p-1]!="02" && map[m][p-1]!="01"){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+}
+} else if(map[m][p]=="02" && map[m+2][p-2]=="02"){
+//alert('27');
+if(map[m+1][p-1]!="02" && map[m+1][p-1]!="01" ){
+d=(m+1)+'|'+(p-1);
+map[m+1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p+2]=="02"){
+//alert('28');
+if(map[m-1][p+1]!="02" && map[m-1][p+1]!="01" ){
+d=(m-1)+'|'+(p+1);
+map[m-1][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p-2]=="02"){
+//alert('29');
+if(map[m-1][p-1]!="02" && map[m-1][p-1]!="01" ){
+d=(m-1)+'|'+(p-1);
+map[m-1][p-1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p+2]=="02"){
+//alert('30');
+if(map[m+1][p+1]!="02" && map[m+1][p+1]!="01" ){
+d=(m+1)+'|'+(p+1);
+map[m+1][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m+2][p]=="02"){
+//alert('31');
+if(map[m+1][p]!="02" && map[m+1][p]!="01" ){
+d=(m+1)+'|'+p;
+map[m+1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m-2][p]=="02"){
+//alert('32');
+if(map[m-1][p]!="02" && map[m-1][p]!="01" ){
+d=(m-1)+'|'+p;
+map[m-1][p]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p+2]=="02"){
+//alert('33');
+//alert(m+','+p);
+if(map[m][p+1]!="02" && map[m][p+1]!="01" ){
+d=m+'|'+(p+1);
+map[m][p+1]='02';
+return d;
+break;
+}
+} else if(map[m][p]=="02" && map[m][p-2]=="02"){
+//alert('34');
+if(map[m][p-1]!="02" && map[m][p-1]!="01" ){
+d=m+'|'+(p-1);
+map[m][p-1]='02';
+return d;
+break;
+}
+}
+}
+}
+p++;
+}
+m++;
+}
+}
+function yanqi(b,c,jk){
+//alert(jk);
+if(jk=="0"){
+if(map[b-1][c]!="01" && map[b-1][c]!="02"){
+//alert('1');
+d=(b-1)+'|'+c;
+map[b-1][c]='02';
+return d;
+} else if(map[b][c-1]!="01" && map[b][c-1]!="02") {
+//alert('2');
+d=b+'|'+(c-1);
+map[b][c-1]='02';
+return d;
+} else if(map[b][c+1]!="01" && map[b][c+1]!="02"){
+//alert('3');
+d=b+'|'+(c+1);
+map[b][c+1]='02';
+return d;
+} else if(map[b+1][c]!="01" && map[b+1][c]!="02"){
+//alert('4');
+d=(b+1)+'|'+c;
+map[b+1][c]='02';
+return d;
+} else if(map[b+1][c+1]!="01" && map[b+1][c+1]!="02"){
+//alert('5');
+d=(b+1)+'|'+(c+1);
+map[b+1][c+1]='02';
+return d;
+} else if(map[b-1][c-1]!="01" && map[b-1][c-1]!="02"){
+//alert('6');
+d=(b-1)+'|'+(c-1);
+map[b-1][c-1]='02';
+return d;
+} else if(map[b-1][c+1]!="01" && map[b-1][c+1]!="02"){
+//alert('7');
+d=(b-1)+'|'+(c+1);
+map[b-1][c+1]='02';
+return d;
+} else if(map[b+1][c-1]!="01" && map[b+1][c-1]!="02"){
+//alert('8');
+d=(b+1)+'|'+(c-1);
+map[b+1][c-1]='02';
+return d;
+}
+}
+}
+var maxtime=120;
+function CountDown(){  
+ if(maxtime>=0){  
+ seconds =60*(Math.floor(maxtime/60))+ Math.floor(maxtime%60);
+ msg =seconds;  
+ document.all["b5"].innerHTML=msg;  
+ --maxtime;  
+ } 
+ else{  
+ clearInterval(timer);  
+ restart=confirm("时间到，游戏结束，游戏是否重新开始？");
+if(restart){
+window.location.reload();
+}
+ }  
+}  
+timer = setInterval("CountDown()",1000); 
+var counternum=0;
+function Count_num(){
+if(counternum>=0){  
+ hours=Math.floor(counternum/60)
+ seconds =Math.floor(counternum%60);
+ msg = hours+'分'+seconds+'秒';  
+ document.all["b7"].innerHTML=msg;  
+ ++counternum;  
+ } 
+ else{  
+ clearInterval(timer1);  
+ }  
+}
+timer1 = setInterval("Count_num()",1000); 
+function kaishi(){
+window.location.reload(); 
+}
+onload=createtable;
+</script>
+</body>
+</html>
